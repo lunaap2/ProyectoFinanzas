@@ -1,0 +1,8 @@
+Guarda aquí las 2 capturas de pantalla que pide la actividad:
+
+  lista.png       -> pantalla principal con la lista de transacciones
+  formulario.png  -> pantalla del formulario de registro
+
+Para tomarlas: ejecuta la app en el emulador de Android Studio y usa el
+botón de cámara del emulador (o Ctrl+S). Luego renombra los archivos como
+arriba. El README.md ya las muestra automáticamente.
