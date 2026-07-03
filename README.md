@@ -5,11 +5,11 @@ Permite crear, ver, editar y eliminar transacciones, y guarda toda la informaci�
 localmente en una base de datos **SQLite**, por lo que los datos permanecen aunque
 se cierre la aplicación.
 
-## 👤 Estudiante
+##  Estudiante
 
-**[Escribe aquí tu nombre completo]**
+**Luna Gutiierez Diaz**
 
-## 📱 Descripción
+##  Descripción
 
 La app funciona como un registro de finanzas personales:
 
@@ -29,7 +29,7 @@ La app funciona como un registro de finanzas personales:
 | Editar | Toca una transacción de la lista |
 | Eliminar | Mantén presionada una transacción (pide confirmación) |
 
-## 🛠️ Requerimientos técnicos cumplidos
+##  Requerimientos técnicos cumplidos
 
 1. **Interfaz (Layouts):** pantalla principal con RecyclerView + FAB, pantalla de
    formulario y layout personalizado para cada ítem.
@@ -39,7 +39,7 @@ La app funciona como un registro de finanzas personales:
 3. **RecyclerView:** `Adapter` personalizado en Java con patrón `ViewHolder`. La
    lista se actualiza en tiempo real al agregar, editar o eliminar.
 
-## 🗂️ Estructura del código (separación de responsabilidades)
+##  Estructura del código (separación de responsabilidades)
 
 ```
 app/src/main/java/com/example/finanzas/
@@ -55,21 +55,3 @@ app/src/main/res/layout/
 └── item_transaccion.xml      # Diseño de cada fila
 ```
 
-## 📸 Capturas de pantalla
-
-> Reemplaza estas imágenes por capturas reales tomadas desde el emulador o tu
-> celular (menú de Android Studio: **View > Tool Windows > Running Devices**, o el
-> botón de cámara del emulador). Guárdalas en la carpeta `screenshots/`.
-
-| Lista de transacciones | Formulario de registro |
-|------------------------|------------------------|
-| ![Lista](screenshots/lista.png) | ![Formulario](screenshots/formulario.png) |
-
-## ▶️ Cómo ejecutar
-
-1. Abrir el proyecto en **Android Studio**.
-2. Esperar a que Gradle sincronice.
-3. Ejecutar en un emulador o dispositivo (botón ▶ *Run*).
-
-- Lenguaje: **Java**
-- `minSdk`: 24 · `targetSdk`: 36
