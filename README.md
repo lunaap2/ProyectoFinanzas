@@ -7,7 +7,7 @@ se cierre la aplicación.
 
 ##  Estudiante
 
-**Luna Gutiierez Diaz**
+**Luna Gutierez Diaz**
 
 ##  Descripción
 
