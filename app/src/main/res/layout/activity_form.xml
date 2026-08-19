@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -11,52 +12,54 @@
         android:padding="24dp">
 
         <!-- Concepto -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Concepto"
-            android:textSize="14sp"
-            android:textColor="#555555" />
-
-        <EditText
-            android:id="@+id/edtConcepto"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutConcepto"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ej: Almuerzo, Pago de internet"
-            android:inputType="textCapSentences"
-            android:maxLines="1" />
+            android:hint="Concepto">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtConcepto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Monto -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Monto"
-            android:textSize="14sp"
-            android:textColor="#555555" />
-
-        <EditText
-            android:id="@+id/edtMonto"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutMonto"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ej: 25000"
-            android:inputType="numberDecimal" />
+            android:layout_marginTop="16dp"
+            android:hint="Monto">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtMonto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Tipo -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="Tipo"
-            android:textSize="14sp"
-            android:textColor="#555555" />
+            android:textColor="#555555"
+            android:textSize="14sp" />
 
         <RadioGroup
             android:id="@+id/grupoTipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp">
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/radioIngreso"
@@ -69,12 +72,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:text="Gasto"
-                android:checked="true" />
+                android:checked="true"
+                android:text="Gasto" />
         </RadioGroup>
 
         <!-- Guardar -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,13 +1,17 @@
-package com.example.finanzas;
+package com.example.finanzasluna;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +22,7 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
     public interface OnItemListener {
         void onItemClick(Transaccion t);       // click normal -> editar
 
-        void onItemLongClick(Transaccion t);    // click largo -> eliminar
+        void onItemLongClick(Transaccion t);    // click largo / boton -> eliminar
     }
 
     private List<Transaccion> transacciones;
@@ -46,15 +50,21 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
         holder.txtConcepto.setText(t.getConcepto());
         holder.txtTipo.setText(t.getTipo());
 
-        // Color e indicador segun sea ingreso (+ verde) o gasto (- rojo).
+        // Color, icono y tarjeta segun sea ingreso (verde) o gasto (rojo).
         if (t.esIngreso()) {
             holder.txtMonto.setText(String.format(Locale.getDefault(), "+ $%.2f", t.getMonto()));
-            holder.txtMonto.setTextColor(Color.parseColor("#2E7D32")); // verde
+            holder.txtMonto.setTextColor(Color.parseColor("#2E7D32"));
             holder.txtTipo.setTextColor(Color.parseColor("#2E7D32"));
+            holder.imgIcono.setImageResource(R.drawable.ic_arrow_upward);
+            holder.imgIcono.setColorFilter(Color.parseColor("#2E7D32"));
+            holder.cardIcono.setCardBackgroundColor(Color.parseColor("#E8F5E9"));
         } else {
             holder.txtMonto.setText(String.format(Locale.getDefault(), "- $%.2f", t.getMonto()));
-            holder.txtMonto.setTextColor(Color.parseColor("#C62828")); // rojo
+            holder.txtMonto.setTextColor(Color.parseColor("#C62828"));
             holder.txtTipo.setTextColor(Color.parseColor("#C62828"));
+            holder.imgIcono.setImageResource(R.drawable.ic_arrow_downward);
+            holder.imgIcono.setColorFilter(Color.parseColor("#C62828"));
+            holder.cardIcono.setCardBackgroundColor(Color.parseColor("#FFEBEE"));
         }
 
         // Eventos: click para editar, boton (o click largo) para eliminar.
@@ -71,7 +81,7 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
         return transacciones.size();
     }
 
-    //reemplaza los datos y refresca la lista (se usa al recargar desde la BD)
+    // reemplaza los datos y refresca la lista (se usa desde el SnapshotListener de Firestore)
     public void actualizarLista(List<Transaccion> nuevas) {
         this.transacciones = nuevas;
         notifyDataSetChanged();
@@ -82,13 +92,17 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
         TextView txtConcepto;
         TextView txtTipo;
         TextView txtMonto;
-        android.widget.ImageButton btnEliminar;
+        ImageView imgIcono;
+        MaterialCardView cardIcono;
+        ImageButton btnEliminar;
 
         TransaccionViewHolder(@NonNull View itemView) {
             super(itemView);
             txtConcepto = itemView.findViewById(R.id.txtConcepto);
             txtTipo = itemView.findViewById(R.id.txtTipo);
             txtMonto = itemView.findViewById(R.id.txtMonto);
+            imgIcono = itemView.findViewById(R.id.imgIcono);
+            cardIcono = itemView.findViewById(R.id.cardIcono);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
     }

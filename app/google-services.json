@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "290464257385",
+    "project_id": "finanzas-bb4f4",
+    "storage_bucket": "finanzas-bb4f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290464257385:android:bc5b5118007d135a1959f8",
+        "android_client_info": {
+          "package_name": "com.example.finanzasluna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrgvkHLRc41sJB_s-i3900lkYKU14SCJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
