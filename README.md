@@ -35,6 +35,9 @@ La app funciona como un registro de finanzas personales conectado a la nube:
 - **Diseño de cada ítem:** tarjeta con ícono circular (flecha arriba/abajo según
   el tipo), concepto, tipo y monto, con indicador visual por color (verde `+`
   para ingresos, rojo `-` para gastos).
+  
+https://drive.google.com/file/d/1Nt4brXhPBzt0C-2GOD9ZHlRiShcoaETZ/view?usp=drivesdk
+
 
 ### Acciones
 
@@ -66,6 +69,9 @@ La app funciona como un registro de finanzas personales conectado a la nube:
      concepto es muy corto o si el monto es ≤ $0 mientras el usuario escribe).
    - El botón "Guardar" se deshabilita mientras se guarda, previniendo el doble
      envío.
+https://drive.google.com/file/d/17QP-v_YQU2Se4uk8AYuzbvM9a-RH-vf7/view?usp=drivesdk
+
+     
    - El `ListenerRegistration` de Firestore se libera con `.remove()` en el
      `onDestroy()` de `MainActivity` para no dejar listeners activos en memoria.
 
@@ -78,6 +84,7 @@ La app funciona como un registro de finanzas personales conectado a la nube:
 3. Base de datos: **Firestore Database**, colección `transacciones`, con reglas
    abiertas de solo lectura/escritura para efectos de desarrollo y evaluación
    académica (`allow read, write: if true;`).
+   https://drive.google.com/file/d/1iWZJ9VMi08USw9S_3mP969LoCFssqaGX/view?usp=drivesdk
 
 ##  Estructura del código (separación de responsabilidades)
 
