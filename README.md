@@ -93,6 +93,23 @@ pantalla de Registro.
 - Validaciones en tiempo real con `TextInputLayout.setError()` en todos los
   formularios (concepto, monto, correo, contraseñas, nombre).
 
+## Evidencia de pruebas (Momento 3)
+
+Los 5 pilares se probaron de punta a punta en un emulador Android real
+(Medium_Phone, API 37 con Google Play) antes de la entrega:
+
+| Pilar | Qué se verificó |
+|-------|------------------|
+| Auth + RBAC + Sesión | Login con la cuenta Admin, **Auto-Login** al reabrir la app (sin pedir credenciales de nuevo), **Logout** limpia la sesión (`SharedPreferences` + `FirebaseAuth`) y vuelve al Login, y el **RBAC**: con la cuenta Admin el ícono de eliminar aparece en cada tarjeta; con la cuenta Operario desaparece de todas. |
+| Firestore + Storage + Glide | Se creó una transacción con foto tomada desde la **cámara** del emulador; la imagen se subió a Firebase Storage (el SDK reintentó solo ante cortes de red del emulador) y la miniatura real se vio renderizada con Glide en la lista, en tiempo real. |
+| Mapas + GPS | Se otorgó el permiso de ubicación (Precise), `FusedLocationProviderClient` + `Geocoder` devolvieron una dirección legible, y el pin apareció en `MapaActivity` con el color correcto (rojo = gasto) y su `InfoWindow` mostrando concepto, monto y dirección. |
+| Notificaciones | Al guardar la transacción llegó la notificación local ("Transacción creada · Prueba Momento 3 · $25000.0") y tocarla reabrió la app (`PendingIntent`); también se confirmó en el log la generación del token FCM. |
+| Seguridad adicional | `MainActivity` rechazó ser lanzada directamente desde fuera de la app (`exported="false"`), confirmando que solo es accesible a través del flujo de Login. |
+
+Como resultado de esa prueba quedó un registro real de ejemplo en Firestore
+("Prueba Momento 3", con foto y ubicación en Mountain View, CA) que sirve como
+demo con datos reales para la sustentación.
+
 ## Evidencia visual (Momento 2)
 
 Grabaciones/capturas de la entrega anterior (CRUD en tiempo real sobre Firestore):
