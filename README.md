@@ -95,6 +95,14 @@ pantalla de Registro.
 - Validaciones en tiempo real con `TextInputLayout.setError()` en todos los
   formularios (concepto, monto, correo, contraseñas, nombre).
 
+## Evidencia visual (Momento 2)
+
+Grabaciones/capturas de la entrega anterior (CRUD en tiempo real sobre Firestore):
+
+- [Diseño de cada ítem de la lista (tarjeta con ícono, color y monto)](https://drive.google.com/file/d/1Nt4brXhPBzt0C-2GOD9ZHlRiShcoaETZ/view?usp=drivesdk)
+- [Validaciones en tiempo real y sincronización vía SnapshotListener](https://drive.google.com/file/d/17QP-v_YQU2Se4uk8AYuzbvM9a-RH-vf7/view?usp=drivesdk)
+- [Reglas de Firestore en la consola de Firebase](https://drive.google.com/file/d/1iWZJ9VMi08USw9S_3mP969LoCFssqaGX/view?usp=drivesdk)
+
 ## Reglas de seguridad (pendiente de publicar manualmente)
 
 El proyecto sigue con reglas abiertas de desarrollo
