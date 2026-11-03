@@ -16,6 +16,16 @@ public class Transaccion {
     private double monto;
     private String tipo;
 
+    // Autor del registro (para auditoria y para el InfoWindow del mapa).
+    private String userId;
+    private String userEmail;
+
+    // Evidencia fotografica (Firebase Storage) y geolocalizacion (FusedLocationProviderClient + Geocoder).
+    private String fotoUrl;
+    private Double latitud;
+    private Double longitud;
+    private String direccion;
+
     @ServerTimestamp
     private Date creadoEn;
 
@@ -74,5 +84,58 @@ public class Transaccion {
     @Exclude
     public boolean esIngreso() {
         return TIPO_INGRESO.equals(tipo);
+    }
+
+    @Exclude
+    public boolean tieneUbicacion() {
+        return latitud != null && longitud != null;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
+    }
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

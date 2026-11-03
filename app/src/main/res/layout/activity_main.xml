@@ -7,24 +7,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Encabezado con el titulo y el saldo total -->
+    <!-- Toolbar: hospeda el menu de opciones (Ver mapa / Cerrar sesion) -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/azul_primario"
+        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
+        android:title="Mis Finanzas"
+        app:titleTextColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Encabezado con el usuario conectado y el saldo total -->
     <LinearLayout
         android:id="@+id/encabezado"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#1565C0"
+        android:background="@color/azul_primario"
         android:padding="20dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
+            android:id="@+id/txtUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mis Finanzas"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:layout_marginTop="2dp"
+            android:text="Hola"
+            android:textColor="#CFE3FF"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/txtSaldo"

@@ -75,6 +75,23 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- Miniatura de la foto de evidencia (Firebase Storage), cargada con Glide -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="4dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/imgFoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_photo_placeholder" />
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Boton para eliminar la transaccion -->
         <ImageButton
             android:id="@+id/btnEliminar"

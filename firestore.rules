@@ -1,0 +1,38 @@
+rules_version = '2';
+
+// Reglas de referencia para el proyecto "finanzas-bb4f4". Actualmente el proyecto
+// esta configurado con reglas abiertas ("allow read, write: if true") para facilitar
+// el desarrollo. Antes de la sustentacion, pega este contenido en:
+// Firebase Console > Firestore Database > Reglas > Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function estaAutenticado() {
+      return request.auth != null;
+    }
+
+    function rolDe(uid) {
+      return get(/databases/$(database)/documents/usuarios/$(uid)).data.rol;
+    }
+
+    function esAdmin() {
+      return estaAutenticado() && rolDe(request.auth.uid) == 'admin';
+    }
+
+    // Cada usuario solo puede leer/escribir su propio perfil (y los admin pueden leer todos).
+    match /usuarios/{uid} {
+      allow read: if estaAutenticado();
+      allow create, update: if estaAutenticado() && request.auth.uid == uid;
+      allow delete: if esAdmin();
+    }
+
+    // Transacciones: cualquier usuario autenticado puede ver y crear; solo el autor
+    // puede editar su propio registro; solo el rol Administrador puede eliminar.
+    match /transacciones/{id} {
+      allow read: if estaAutenticado();
+      allow create: if estaAutenticado() && request.resource.data.userId == request.auth.uid;
+      allow update: if estaAutenticado() && (resource.data.userId == request.auth.uid || esAdmin());
+      allow delete: if esAdmin();
+    }
+  }
+}

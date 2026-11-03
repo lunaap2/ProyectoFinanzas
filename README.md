@@ -1,103 +1,155 @@
 # Mis Finanzas — Gestor de Gastos Personales
 
-Aplicación nativa de Android (Java) para registrar **ingresos y gastos** diarios.
-Permite crear, ver, editar y eliminar transacciones, con los datos sincronizados
-**en la nube y en tiempo real** mediante **Firebase Firestore**: cualquier cambio
-hecho desde un teléfono se refleja al instante en todos los demás dispositivos
-conectados a la misma cuenta.
+Aplicación nativa de Android (Java) para registrar **ingresos y gastos** diarios,
+adjuntando **evidencia fotográfica** y la **ubicación** donde ocurrió cada
+transacción. Los datos viven en la nube (**Firebase Firestore** + **Firebase
+Storage**) y se sincronizan en tiempo real entre dispositivos. El acceso está
+protegido con **FirebaseAuth** y control de roles (RBAC): un **Administrador**
+puede eliminar cualquier transacción, mientras que un **Operario** solo puede
+crear y consultar.
 
-##  Estudiante
+## Estudiante
 
 **Luna Gutierrez Diaz**
 
-##  Evolución del proyecto
+## Evolución del proyecto
 
 | Entrega | Persistencia | Alcance |
 |---------|--------------|---------|
-| Primer Seguimiento (Momento 1) | SQLite local | Los datos vivían solo en el teléfono donde se instalaba la app. |
-| Segundo Seguimiento (Momento 2) — **actual** | Firebase Firestore (NoSQL, en la nube) | Varios teléfonos ven el mismo inventario de transacciones en tiempo real, sin recargar. |
+| Momento 1 | SQLite local | Los datos vivían solo en el teléfono donde se instalaba la app. |
+| Momento 2 | Firebase Firestore (NoSQL, en la nube) | Varios teléfonos ven el mismo inventario de transacciones en tiempo real. |
+| Momento 3 — **actual** | Firestore + Storage + Auth + Maps + Notificaciones | Producto completo: login con roles, fotos de evidencia, geolocalización con mapa interactivo y notificaciones. |
 
-##  Descripción
+## Credenciales de prueba
 
-La app funciona como un registro de finanzas personales conectado a la nube:
+> ⚠️ **Pendiente de completar antes de entregar.** Las cuentas se crean desde la
+> propia app (pantalla **Registrarse**), no desde este repositorio. Corre la app,
+> registra exactamente estas dos cuentas (o las que prefieras) y luego actualiza
+> esta tabla con los datos reales que usaste:
 
-- **Pantalla principal:** lista todas las transacciones en un `RecyclerView` con
-  tarjetas (`CardView`) con sombra, esquinas redondeadas e íconos, y muestra el
-  **saldo total** (ingresos menos gastos). Incluye un botón flotante
-  (`FloatingActionButton`) para agregar una nueva transacción. La lista está
-  conectada a Firestore mediante un `SnapshotListener`, por lo que se actualiza
-  sola en tiempo real ante cualquier cambio (propio o de otro dispositivo).
-- **Pantalla de creación/edición:** formulario con `TextInputLayout` de Material
-  Design para el concepto y el monto, y un `RadioGroup` para elegir entre
-  **Ingreso** o **Gasto**. Incluye validaciones de negocio en tiempo real
-  (`TextWatcher`) y deshabilita el botón "Guardar" mientras se escribe en
-  Firestore, para evitar el doble envío.
-- **Diseño de cada ítem:** tarjeta con ícono circular (flecha arriba/abajo según
-  el tipo), concepto, tipo y monto, con indicador visual por color (verde `+`
-  para ingresos, rojo `-` para gastos).
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `admin@finanzasluna.com` | `Admin123!` |
+| Operario | `operario@finanzasluna.com` | `Operario123!` |
 
-### Acciones
+Al registrar cada cuenta, elige el rol correspondiente en el `RadioGroup` de la
+pantalla de Registro.
 
-| Acción | Cómo se hace |
-|--------|--------------|
-| Crear  | Botón flotante **+** |
-| Editar | Toca una transacción de la lista |
-| Eliminar | Mantén presionada una transacción, o el ícono de basura (pide confirmación) |
+## Los 5 pilares del Momento 3
 
-##  Requerimientos técnicos cumplidos (Segundo Seguimiento)
+### A. Seguridad y control de acceso (Auth + RBAC + Sesión)
+- `LoginActivity` / `RegisterActivity`: registro e inicio de sesión con
+  `FirebaseAuth` (correo/contraseña), validado en vivo con `TextInputLayout.setError`.
+- `SessionManager` persiste la sesión en `SharedPreferences` → **Auto-Login**: si
+  ya hay sesión guardada y FirebaseAuth la reconoce, `LoginActivity` salta directo
+  a `MainActivity`.
+- **Cerrar sesión** (menú superior de `MainActivity`): `FirebaseAuth.signOut()` +
+  `SessionManager.cerrarSesion()` (limpia la caché local) + regreso a `LoginActivity`.
+- **RBAC**: el rol (`admin`/`operario`) se guarda en `usuarios/{uid}` y se elige al
+  registrarse. Solo `admin` ve y puede usar el botón de eliminar en cada tarjeta
+  (`TransaccionAdapter`); `operario` puede crear y ver todo, pero no borrar nada.
 
-1. **Sincronización en tiempo real:** el `RecyclerView` ya no lee de SQLite; está
-   conectado a la colección `transacciones` de Firestore mediante un
-   `SnapshotListener` (`FirestoreRepository.escucharCambios`).
-2. **CRUD completo en NoSQL:**
-   - *Create:* el formulario agrega documentos nuevos con `coleccion.add(t)`.
-   - *Read:* la lista mapea automáticamente cada documento a la clase POJO
-     `Transaccion` (`DocumentSnapshot.toObject`).
-   - *Update:* la edición sobrescribe el documento apuntando a su `Document ID`
-     (`coleccion.document(id).set(t)`).
-   - *Delete:* el borrado apunta también al `Document ID`
-     (`coleccion.document(id).delete()`).
-3. **Diseño de interfaz (UI/UX):** listado con `CardView` (sombra, bordes
-   redondeados, íconos vectoriales) y formularios con `TextInputLayout` de
-   Material Design.
-4. **Validaciones y rendimiento:**
-   - Ningún campo crítico (concepto, monto) se envía vacío a Firestore.
-   - Validaciones de negocio en tiempo real con `TextWatcher` (avisa si el
-     concepto es muy corto o si el monto es ≤ $0 mientras el usuario escribe).
-   - El botón "Guardar" se deshabilita mientras se guarda, previniendo el doble
-     envío.
-   - El `ListenerRegistration` de Firestore se libera con `.remove()` en el
-     `onDestroy()` de `MainActivity` para no dejar listeners activos en memoria.
+### B. Datos y multimedia (Firestore + Storage + Glide)
+- CRUD en tiempo real sobre `transacciones` (ya existente desde Momento 2, con
+  `addSnapshotListener`).
+- `FormActivity` permite adjuntar una foto por **Cámara**
+  (`ActivityResultContracts.TakePicturePreview`, con permiso `CAMERA` en runtime) o
+  **Galería** (`ActivityResultContracts.PickVisualMedia`, el selector moderno de
+  fotos que no necesita permisos de almacenamiento).
+- `StorageRepository` sube el JPEG a `evidencias/{uid}/{uuid}.jpg` en Firebase
+  Storage, reporta el progreso (`ProgressBar`) y obtiene el `Download URL`.
+- `TransaccionAdapter` pinta la miniatura con **Glide**
+  (`placeholder`/`error`/`centerCrop`), lo que evita el bug de reciclaje del
+  `RecyclerView` (una fila nunca muestra momentáneamente la foto de otra).
 
-##  Configuración de Firebase
+### C. Geolocalización y mapas (GPS + Google Maps SDK)
+- `LocationHelper` usa `FusedLocationProviderClient.getCurrentLocation(...)` (con
+  permiso `ACCESS_FINE_LOCATION`/`ACCESS_COARSE_LOCATION` pedido en runtime) y
+  convierte las coordenadas a una dirección legible con `Geocoder`
+  (geocodificación inversa, corrida en un hilo de fondo).
+- `MapaActivity` muestra un `SupportMapFragment` con un marcador por cada
+  transacción que tenga ubicación (verde = ingreso, rojo = gasto), `InfoWindow` al
+  tocar el pin (concepto, monto y dirección), zoom habilitado y un menú para
+  alternar entre capa **Normal** y **Satélite**.
+- La Maps API Key vive en `AndroidManifest.xml`
+  (`com.google.android.geo.API_KEY`), ligada al proyecto GCP `finanzas-bb4f4`.
+  Si necesitas regenerarla: Google Cloud Console → selecciona el proyecto → *APIs
+  & Services → Library* → habilita **Maps SDK for Android** → *Credentials →
+  Create API Key*.
 
-1. Proyecto de Firebase: `finanzas-bb4f4`, con la app Android registrada bajo el
-   `applicationId` **`com.example.finanzasluna`**.
-2. El archivo `app/google-services.json` conecta la app con ese proyecto (no se
-   versiona con credenciales reales de producción compartidas públicamente).
-3. Base de datos: **Firestore Database**, colección `transacciones`, con reglas
-   abiertas de solo lectura/escritura para efectos de desarrollo y evaluación
-   académica (`allow read, write: if true;`).
+### D. Notificaciones (locales y push)
+- `NotificationHelper.crearCanal()` registra el `NotificationChannel` requerido
+  desde Android 8.0, y pide el permiso `POST_NOTIFICATIONS` en Android 13+
+  (`MainActivity`, vía `ActivityResultLauncher`).
+- Cada vez que `FormActivity` guarda una transacción con éxito, se emite una
+  notificación local con `PendingIntent` que reabre la app en `MainActivity`.
+- `MyFirebaseMessagingService` deja la infraestructura de **FCM** lista para
+  recibir mensajes push enviados desde la consola de Firebase (*Cloud Messaging →
+  Send your first message*), guardando el token de cada dispositivo en
+  `usuarios/{uid}.fcmToken`.
 
-##  Estructura del código (separación de responsabilidades)
+### E. Diseño, responsividad y buenas prácticas
+- Todas las pantallas con formularios (`Login`, `Registro`, `Form`) usan
+  `ScrollView` + `fillViewport`, por lo que nada se corta ni se superpone al rotar
+  a horizontal.
+- Validaciones en tiempo real con `TextInputLayout.setError()` en todos los
+  formularios (concepto, monto, correo, contraseñas, nombre).
+
+## Reglas de seguridad (pendiente de publicar manualmente)
+
+El proyecto sigue con reglas abiertas de desarrollo
+(`allow read, write: if true`). Este repo incluye `firestore.rules` y
+`storage.rules` con las reglas reales (admin-only delete, cada usuario escribe
+solo su propio perfil/sus propias fotos). Este entorno no tiene el Firebase CLI
+instalado, así que **antes de la sustentación** debes pegar manualmente ese
+contenido en:
+- Firebase Console → Firestore Database → Reglas → Publicar.
+- Firebase Console → Storage → Reglas → Publicar.
+
+## Configuración de Firebase
+
+1. Proyecto de Firebase: `finanzas-bb4f4`, `applicationId`
+   **`com.example.finanzasluna`**.
+2. `app/google-services.json` conecta la app con ese proyecto.
+3. Colecciones de Firestore: `transacciones` (ingresos/gastos, con foto y
+   ubicación opcionales) y `usuarios` (perfil + rol de cada cuenta).
+4. Firebase Storage: carpeta `evidencias/{uid}/...` para las fotos.
+
+## Estructura del código
 
 ```
 app/src/main/java/com/example/finanzasluna/
-├── Transaccion.java          # Modelo de datos (POJO mapeado por Firestore)
-├── FirestoreRepository.java  # Acceso a Firestore: CRUD + SnapshotListener
-├── TransaccionAdapter.java   # Adapter + ViewHolder del RecyclerView (CardView)
-├── MainActivity.java         # Pantalla principal (lista en tiempo real + saldo + FAB)
-└── FormActivity.java         # Formulario de crear / editar (TextInputLayout + validaciones)
+├── Transaccion.java              # Modelo (POJO) de cada transaccion
+├── Usuario.java                  # Modelo (POJO) del perfil + rol
+├── FirestoreRepository.java      # CRUD + SnapshotListener de "transacciones"
+├── AuthRepository.java           # Registro / login / logout (FirebaseAuth + Firestore)
+├── StorageRepository.java        # Subida de fotos a Firebase Storage
+├── LocationHelper.java           # FusedLocationProviderClient + Geocoder
+├── NotificationHelper.java       # NotificationChannel + notificaciones locales
+├── MyFirebaseMessagingService.java # Infraestructura FCM (push)
+├── SessionManager.java           # Sesion persistida en SharedPreferences
+├── TransaccionAdapter.java       # Adapter del RecyclerView (Glide + RBAC)
+├── LoginActivity.java            # Launcher: login + Auto-Login
+├── RegisterActivity.java         # Registro (incluye seleccion de rol)
+├── MainActivity.java             # Lista en tiempo real + saldo + menu (mapa/logout)
+├── FormActivity.java             # Crear/editar: foto + ubicacion + notificacion
+└── MapaActivity.java             # Mapa con pines por transaccion
 
 app/src/main/res/layout/
-├── activity_main.xml         # Pantalla principal
-├── activity_form.xml         # Formulario (TextInputLayout)
-└── item_transaccion.xml      # Diseño de cada fila (CardView + ícono)
+├── activity_login.xml / activity_register.xml
+├── activity_main.xml / activity_form.xml / activity_mapa.xml
+└── item_transaccion.xml
 
-app/src/main/res/drawable/
-├── ic_arrow_upward.xml       # Ícono de ingreso
-├── ic_arrow_downward.xml     # Ícono de gasto
-├── ic_delete.xml             # Ícono de eliminar
-└── ic_add.xml                # Ícono del FAB
+firestore.rules / storage.rules   # Reglas de seguridad de referencia (ver arriba)
 ```
 
+## Acciones
+
+| Acción | Cómo se hace |
+|--------|--------------|
+| Registrarse / iniciar sesión | `LoginActivity` → `RegisterActivity` |
+| Crear transacción (+foto +ubicación) | Botón flotante **+** dentro de `FormActivity` |
+| Editar | Toca una transacción de la lista |
+| Eliminar (solo Administrador) | Ícono de basura en la tarjeta (pide confirmación) |
+| Ver mapa de transacciones | Menú superior → "Ver mapa" |
+| Cerrar sesión | Menú superior → "Cerrar sesion" |

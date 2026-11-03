@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
@@ -27,10 +28,13 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
 
     private List<Transaccion> transacciones;
     private final OnItemListener listener;
+    // RBAC: solo el rol Administrador puede ver/usar el boton de eliminar.
+    private final boolean esAdmin;
 
-    public TransaccionAdapter(List<Transaccion> transacciones, OnItemListener listener) {
+    public TransaccionAdapter(List<Transaccion> transacciones, OnItemListener listener, boolean esAdmin) {
         this.transacciones = transacciones;
         this.listener = listener;
+        this.esAdmin = esAdmin;
     }
 
 
@@ -67,11 +71,25 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
             holder.cardIcono.setCardBackgroundColor(Color.parseColor("#FFEBEE"));
         }
 
+        // Miniatura con Glide: placeholder/error evitan que, al reciclar la vista, se vea
+        // por un instante la foto de otra transaccion antes de que cargue la correcta.
+        Glide.with(holder.imgFoto.getContext())
+                .load(t.getFotoUrl())
+                .placeholder(R.drawable.ic_photo_placeholder)
+                .error(R.drawable.ic_photo_placeholder)
+                .centerCrop()
+                .into(holder.imgFoto);
+
+        // RBAC: el boton de eliminar solo existe para el rol Administrador.
+        holder.btnEliminar.setVisibility(esAdmin ? View.VISIBLE : View.GONE);
+
         // Eventos: click para editar, boton (o click largo) para eliminar.
         holder.itemView.setOnClickListener(v -> listener.onItemClick(t));
         holder.btnEliminar.setOnClickListener(v -> listener.onItemLongClick(t));
         holder.itemView.setOnLongClickListener(v -> {
-            listener.onItemLongClick(t);
+            if (esAdmin) {
+                listener.onItemLongClick(t);
+            }
             return true;
         });
     }
@@ -93,6 +111,7 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
         TextView txtTipo;
         TextView txtMonto;
         ImageView imgIcono;
+        ImageView imgFoto;
         MaterialCardView cardIcono;
         ImageButton btnEliminar;
 
@@ -102,6 +121,7 @@ public class TransaccionAdapter extends RecyclerView.Adapter<TransaccionAdapter.
             txtTipo = itemView.findViewById(R.id.txtTipo);
             txtMonto = itemView.findViewById(R.id.txtMonto);
             imgIcono = itemView.findViewById(R.id.imgIcono);
+            imgFoto = itemView.findViewById(R.id.imgFoto);
             cardIcono = itemView.findViewById(R.id.cardIcono);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
