@@ -101,14 +101,15 @@ Grabaciones/capturas de la entrega anterior (CRUD en tiempo real sobre Firestore
 - [Validaciones en tiempo real y sincronización vía SnapshotListener](https://drive.google.com/file/d/17QP-v_YQU2Se4uk8AYuzbvM9a-RH-vf7/view?usp=drivesdk)
 - [Reglas de Firestore en la consola de Firebase](https://drive.google.com/file/d/1iWZJ9VMi08USw9S_3mP969LoCFssqaGX/view?usp=drivesdk)
 
-## Reglas de seguridad (pendiente de publicar manualmente)
+## Reglas de seguridad
 
-El proyecto sigue con reglas abiertas de desarrollo
-(`allow read, write: if true`). Este repo incluye `firestore.rules` y
-`storage.rules` con las reglas reales (admin-only delete, cada usuario escribe
-solo su propio perfil/sus propias fotos). Este entorno no tiene el Firebase CLI
-instalado, así que **antes de la sustentación** debes pegar manualmente ese
-contenido en:
+Las reglas reales ya están publicadas en el proyecto `finanzas-bb4f4` (verificado:
+una lectura sin autenticar devuelve `403 PERMISSION_DENIED` tanto en Firestore
+como en Storage, y un `operario` no puede escribir el perfil de otro usuario).
+El contenido exacto que quedó publicado vive en `firestore.rules` y
+`storage.rules` en la raíz de este repo (admin-only delete en `transacciones`,
+cada usuario solo escribe su propio perfil/sus propias fotos en `evidencias/{uid}/...`).
+Si alguna vez se necesita republicar, se pega ese mismo contenido en:
 - Firebase Console → Firestore Database → Reglas → Publicar.
 - Firebase Console → Storage → Reglas → Publicar.
 
