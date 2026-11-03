@@ -22,10 +22,8 @@ crear y consultar.
 
 ## Credenciales de prueba
 
-> ⚠️ **Pendiente de completar antes de entregar.** Las cuentas se crean desde la
-> propia app (pantalla **Registrarse**), no desde este repositorio. Corre la app,
-> registra exactamente estas dos cuentas (o las que prefieras) y luego actualiza
-> esta tabla con los datos reales que usaste:
+Cuentas ya creadas en el proyecto de Firebase (`finanzas-bb4f4`), listas para usar
+en la sustentación:
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
